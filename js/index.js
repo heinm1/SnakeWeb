@@ -35,10 +35,19 @@ function moveSnake() {
     snake.y = snake.y + snake.yVelocity;
     snake.position.shift();
     snake.position.push({x: snake.x, y: snake.y});
+}
 
+function isSnakeSafe() {
     if (snake.x > 49 || snake.x < 0 || snake.y > 49 || snake.y < 0) {
-        snake.isSafe = false;
+        return false;
     }
+    for (i = 0; i < snake.position.length - 1; ++i) {
+        const position = snake.position[i];
+        if (position.x == snake.x && position.y == snake.y) {
+            return false;
+        }
+    }
+    return true;
 }
 
 function growSnake() {
@@ -71,6 +80,7 @@ function gameLoop() {
 
     resetScreen();
     moveSnake();
+    snake.isSafe = isSnakeSafe();
 
     if (snake.x == froot.x && snake.y == froot.y) {
         growSnake();
