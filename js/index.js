@@ -10,9 +10,7 @@ function resetScreen() {
 }
 
 function randomNumber() {
-    var num = Math.round(Math.random() * 50);
-    console.log(num);
-    return num;
+    return Math.round(Math.random() * 50);
 }
 
 
@@ -24,7 +22,7 @@ var froot = {
 }
 
 var snake = {
-    x: 0,
+    x: 2,
     y: 0,
     xVelocity: 1,
     yVelocity: 0,
@@ -35,8 +33,8 @@ var snake = {
 function moveSnake() {
     snake.x = snake.x + snake.xVelocity;
     snake.y = snake.y + snake.yVelocity;
-    snake.position.push({x: snake.x, y: snake.y});
     snake.position.shift();
+    snake.position.push({x: snake.x, y: snake.y});
 
     if (snake.x > 49 || snake.x < 0 || snake.y > 49 || snake.y < 0) {
         snake.isSafe = false;
@@ -44,7 +42,7 @@ function moveSnake() {
 }
 
 function growSnake() {
-    
+    snake.position.push({x: snake.x, y: snake.y});
 }
 
 function paintSnake() { 
