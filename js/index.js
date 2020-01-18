@@ -17,7 +17,7 @@ function randomFreeBoadPosition() {
         for (y = 0; y < gameCanvas.height/10; ++y) {
             const p = {x: x, y: y};
             const index = snake.position.findIndex(i => {
-                return i.x === p.x && i.y === p.y
+                return i.x === p.x && i.y === p.y;
             });
             if (index === -1) {
                 choice.push(p);
@@ -29,7 +29,7 @@ function randomFreeBoadPosition() {
 
 function paintSnake() { 
     snake.position.forEach(p => {
-        paintPoint(p.x, p.y, "white")
+        paintPoint(p.x, p.y, "white");
     });
 }
 
@@ -38,17 +38,24 @@ function paintPoint(x, y, colour) {
     ctx.fillRect(x * 10, y * 10, 10, 10);
 }
 
+function paintEndGame() {
+    ctx.font = "20px Arial";
+    ctx.fillText("Game Over", gameCanvas.width/2-50, gameCanvas.height/2);
+}
+
 function start() {
     resetScreen();
+    const snakeX = (gameCanvas.width/10)/2;
+    const snakeY = (gameCanvas.height/10)/2
     snake = {
-        x: 2,
-        y: 0,
+        x: snakeX,
+        y: snakeY,
         xDirection: 1,
         yDirection: 0,
         xVelocity: 1,
         yVelocity: 0,
         isSafe: true,
-        position: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}],
+        position: [{x: snakeX-2, y: snakeY}, {x: snakeX-1, y: snakeY}, {x: snakeX, y: snakeY}],
         moveSnake: function() {
             snake.x = snake.x + snake.xVelocity;
             snake.y = snake.y + snake.yVelocity;
@@ -83,7 +90,12 @@ function start() {
 
 function gameLoop() {
 
-    if (snake.isSafe) { requestAnimationFrame(gameLoop) } else { return }
+    if (snake.isSafe) { 
+        requestAnimationFrame(gameLoop);
+    } else { 
+        paintEndGame();
+        return;
+    }
 
     resetScreen();
     snake.moveSnake();
