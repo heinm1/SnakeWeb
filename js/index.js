@@ -1,57 +1,30 @@
 
-
 var gameCanvas = document.getElementById("gameCanvas");
 var ctx = gameCanvas.getContext("2d");
 resetScreen();
+
+var froot;
+var snake;
 
 function resetScreen() {
     ctx.fillStyle="black";
     ctx.fillRect(0, 0, gameCanvas.width, gameCanvas.height);
 }
 
-function randomNumber() {
-    return Math.round(Math.random() * 50);
-}
-
-
-var count = 0;
-
-var froot = {
-    x: randomNumber(),
-    y: randomNumber()
-}
-
-var snake = {
-    x: 2,
-    y: 0,
-    xVelocity: 1,
-    yVelocity: 0,
-    isSafe: true,
-    position: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}]
-}
-
-function moveSnake() {
-    snake.x = snake.x + snake.xVelocity;
-    snake.y = snake.y + snake.yVelocity;
-    snake.position.shift();
-    snake.position.push({x: snake.x, y: snake.y});
-}
-
-function isSnakeSafe() {
-    if (snake.x > 49 || snake.x < 0 || snake.y > 49 || snake.y < 0) {
-        return false;
-    }
-    for (i = 0; i < snake.position.length - 1; ++i) {
-        const position = snake.position[i];
-        if (position.x == snake.x && position.y == snake.y) {
-            return false;
+function randomFreeBoadPosition() {
+    var choice = [];
+    for (x = 0; x < gameCanvas.width/10; ++x) {
+        for (y = 0; y < gameCanvas.height/10; ++y) {
+            const p = {x: x, y: y};
+            const index = snake.position.findIndex(i => {
+                return i.x === p.x && i.y === p.y
+            });
+            if (index === -1) {
+                choice.push(p);
+            }
         }
     }
-    return true;
-}
-
-function growSnake() {
-    snake.position.push({x: snake.x, y: snake.y});
+    return choice[Math.round(Math.random() * choice.length-1)];
 }
 
 function paintSnake() { 
@@ -65,52 +38,88 @@ function paintPoint(x, y, colour) {
     ctx.fillRect(x * 10, y * 10, 10, 10);
 }
 
+function start() {
+    resetScreen();
+    snake = {
+        x: 2,
+        y: 0,
+        xDirection: 1,
+        yDirection: 0,
+        xVelocity: 1,
+        yVelocity: 0,
+        isSafe: true,
+        position: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}],
+        moveSnake: function() {
+            snake.x = snake.x + snake.xVelocity;
+            snake.y = snake.y + snake.yVelocity;
+            snake.xDirection = snake.xVelocity;
+            snake.yDirection = snake.yVelocity;
+            snake.position.shift();
+            snake.position.push({x: snake.x, y: snake.y});
+        },
+        isSnakeSafe: function() {
+            if (snake.x >= gameCanvas.width/10 || snake.x < 0 || snake.y >= gameCanvas.height/10 || snake.y < 0) {
+                return false;
+            }
+            for (i = 0; i < snake.position.length - 1; ++i) {
+                const position = snake.position[i];
+                if (position.x == snake.x && position.y == snake.y) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        growSnake: function() {
+            snake.position.push({x: snake.x, y: snake.y});
+        }
+    }
+    const pos = randomFreeBoadPosition();
+    froot = {
+        x: pos.x,
+        y: pos.y
+    }
+    gameLoop();
+}
+
 function gameLoop() {
 
-    if (snake.isSafe) {
-        requestAnimationFrame(gameLoop);
-    }
-
-    // slow game loop to 15 fps instead of 60 (60/15 = 4)
-    if (++count < 4) {
-        return;
-    } 
-
-    count = 0;
+    if (snake.isSafe) { requestAnimationFrame(gameLoop) } else { return }
 
     resetScreen();
-    moveSnake();
-    snake.isSafe = isSnakeSafe();
+    snake.moveSnake();
+    snake.isSafe = snake.isSnakeSafe()
 
     if (snake.x == froot.x && snake.y == froot.y) {
-        growSnake();
-        froot.x = randomNumber();
-        froot.y = randomNumber();
+        snake.growSnake();
+        const pos = randomFreeBoadPosition();
+        froot.x = pos.x;
+        froot.y = pos.y;
     }
 
     paintSnake();
     paintPoint(froot.x, froot.y, "green");
+
 }
 
 // listen to keyboard events to move the snake
 document.addEventListener('keydown', function(e) {
     // left arrow key
-    if (e.which === 37 && snake.xVelocity === 0) {
+    if (e.which === 37 && snake.xVelocity === 0 && snake.xDirection === 0) {
       snake.xVelocity = -1;
       snake.yVelocity = 0;
     }
     // up arrow key
-    else if (e.which === 38 && snake.yVelocity === 0) {
+    else if (e.which === 38 && snake.yVelocity === 0 && snake.yDirection === 0) {
       snake.yVelocity = -1;
       snake.xVelocity = 0;
     }
     // right arrow key
-    else if (e.which === 39 && snake.xVelocity === 0) {
+    else if (e.which === 39 && snake.xVelocity === 0 && snake.xDirection === 0) {
       snake.xVelocity = 1;
       snake.yVelocity = 0;
     }
     // down arrow key
-    else if (e.which === 40 && snake.yVelocity === 0) {
+    else if (e.which === 40 && snake.yVelocity === 0 && snake.yDirection === 0) {
       snake.yVelocity = 1;
       snake.xVelocity = 0;
     }

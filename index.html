@@ -8,25 +8,22 @@
         <meta name="author" content="Max Hein">
         <meta name="description" content="A pathfinding project visualised through the a game of Snake">
 
-        <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
 
         <link rel="stylesheet" type="text/css" href="index.css">
     </head>
     <body>
         <header>
-            <h1>New Page</h1> 
-            <button type="button" onclick="paintSnake()">Search One</button>
-            <button type="button" onclick="growSnake()">Search Two</button>
-            <button type="button" onclick="gameLoop()">Search Three</button>
+            <ul>
+                <ls><button type="button" onclick="start()">PlayGame</button></ls>
+            </ul>
+            <a href="#">Snake</a>
         </header>
         <section>
             <div>
-                <canvas id="gameCanvas" width="500" height="500"></canvas>
+                <canvas id="gameCanvas" width="1000" height="500"></canvas>
             </div>
-        </section>   
-        <footer>
-            <p>This is the foot of the page</p>
-        </footer>
+        </section>  
 
         <script src="js/index.js"></script>
     </body>

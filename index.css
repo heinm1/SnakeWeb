@@ -1,10 +1,39 @@
-h1 {
-    background-color:DodgerBlue
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+ls, a, button {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    color: #edf0f1;
+    text-decoration: none;
+}
+
+button {
+    padding: 0;
+    border: none;
+    background: none;
+    margin-right: 15px;
+    cursor: pointer;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 5%;
+    margin-bottom: 16px;
+    background-color: #333;
 }
 
 canvas {
-    padding: 0;
     margin: auto;
     display: block;
-    width: 40%;
+    width: 80%;
+    height: 80%;
 }
